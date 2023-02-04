@@ -1,6 +1,7 @@
 import json
 import os
 from pprint import pprint
+from typing import List, Dict
 
 from services.google_api import GoogleAdminSDKDirectoryAPI
 
@@ -10,7 +11,7 @@ from config.settings import ROOT_DIR
 
 def main():
     graph = build_GCP_permission_graph(os.path.join(
-        ROOT_DIR, 'assets', 'data', 'gcp_permissions.json'))
+        ROOT_DIR, 'assets', 'data', 'examples', 'gcp_permissions.json'))
 
     # Task 1
     display_task_number(1)
@@ -36,7 +37,8 @@ def main():
 
     # Task 5
     display_task_number(5)
-    api_client = GoogleAdminSDKDirectoryAPI()
+    api_client = GoogleAdminSDKDirectoryAPI(os.path.join(
+        ROOT_DIR, 'config', 'service_account_credentials.json'))
     users = api_client.get_all_users()
     if not users:
         print('No users in the domain.')
@@ -54,20 +56,61 @@ def main():
         for group in groups:
             print(f'{group.get("email","")} ({ group.get("name","")})')
 
+    group_members = {}
     print('\nMembers of each groups:')
     for group in groups:
         group_email = group.get('email', '')
         members = api_client.get_members_by_group(group_email)
         if not members:
             print(f'\nNo members in the group {group_email}')
+            group_members[group.get('email', '')] = []
         else:
             print(f'\nMembers of group {group_email}')
+            group_members[group.get('email', '')] = members
             for member in members:
                 print(
-                    f'{member.get("email","")} {member.get("role","")} {member.get("type","")}')
+                    f'{member.get("email","")} {member.get("role","")}')
 
     # Task 6
-    # Todo
+    display_task_number(6)
+
+    # Add belongs_to edges between groups and (users or serviceAccounts)
+    add_nodes(graph, users, groups, group_members)
+
+    # Task 6a
+    display_task_number('6a')
+
+    # This service account doesn't have direct permission on any resource but only through groups it belongs to
+    service_account = Node(
+        id='serviceAccount:compliance-reviewer-2@striking-arbor-264209.iam.gserviceaccount.com', type='identity')
+    resources_permissions = graph.get_resources_and_permissions_of_identity_node(
+        service_account, resources_permissions=[], identity_role='')
+    pprint(resources_permissions)
+
+    # Task 6b
+    display_task_number('6b')
+
+    # This resource and its ancestors don't have direct relationship to reviwers account but only through reviewersGroup
+    resource = Node(id='projects/p31', type='resource')
+    identities_permissions = graph.get_identities_and_permissions_of_resource_node(
+        resource, identities_permissions=[], identity_role='')
+    pprint(identities_permissions)
+
+
+def add_nodes(graph: Graph, users: List, groups: List, group_members: Dict):
+    for user in users:
+        user_node = graph.get_or_insert_node(
+            Node(id=f'user:{user.get("primaryEmail", "")}', type='identity', identity_type='user'))
+    for group in groups:
+        group_node = graph.get_or_insert_node(
+            Node(id=f'group:{group.get("email", "")}', type='identity', identity_type='group'))
+        for member in group_members[group.get('email', '')]:
+            identity_type = 'serviceAccount' if 'gserviceaccount' in member.get(
+                'email', '') else member.get('type', '').lower()
+            member_node = graph.get_or_insert_node(
+                Node(id=f'{identity_type}:{member.get("email", "")}', type='identity', identity_type=identity_type))
+            graph.insert_edge(member_node, group_node, 'belongs_to')
+    return graph
 
 
 def build_GCP_permission_graph(json_file_path: str):
@@ -102,7 +145,8 @@ def build_GCP_permission_graph(json_file_path: str):
                 identity_type = identity.split(':')[0]
                 identity_node = graph.get_or_insert_node(
                     Node(id=identity, type='identity', identity_type=identity_type))
-                graph.insert_edge(identity_node, resource_node, role)
+                graph.insert_edge(
+                    identity_node, resource_node, f'is_{role}_of')
 
     return graph
 

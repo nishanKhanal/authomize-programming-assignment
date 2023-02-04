@@ -3,19 +3,16 @@ import os
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 
-from config.settings import ROOT_DIR
-
 
 class GoogleAdminSDKDirectoryAPI:
 
-    def __init__(self):
+    def __init__(self, credentials_path):
         self.SCOPES = ['https://www.googleapis.com/auth/admin.directory.user.readonly',
                        'https://www.googleapis.com/auth/admin.directory.group.readonly',
                        'https://www.googleapis.com/auth/admin.directory.group.member.readonly',
                        ]
 
-        self.SERVICE_ACCOUNT_FILE = os.path.join(
-            ROOT_DIR, 'config', 'service_account_credentials.json')
+        self.SERVICE_ACCOUNT_FILE = credentials_path
         self.SUBJECT = "ron@test.authomize.com"
 
         self.credentials = service_account.Credentials.from_service_account_file(
@@ -34,4 +31,4 @@ class GoogleAdminSDKDirectoryAPI:
 
     def get_members_by_group(self, group_email):
         results = self.service.members().list(groupKey=group_email).execute()
-        return results.get('members')
+        return results.get('members', [])

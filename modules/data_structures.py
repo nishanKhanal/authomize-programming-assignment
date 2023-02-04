@@ -27,8 +27,7 @@ class Edge:
         self.type = type
 
     def __str__(self):
-        relationship = self.type if self.type == 'is_parent_resource_of' else f"is_{self.type}_of"
-        return f'{self.from_}----{relationship}----{self.to}'
+        return f'{self.from_}----{self.type}----{self.to}'
     
     def __repr__(self):
         return str(self)
@@ -106,24 +105,27 @@ class Graph:
         return self.get_ancestors(current_node, ancestors=[], edge_type = 'is_parent_resource_of')
     
     
-    def get_resources_and_permissions_of_identity_node(self, current_node: Node, resources_permissions=[], parent_identity_role = ''):
+    def get_resources_and_permissions_of_identity_node(self, current_node: Node, resources_permissions=[], identity_role = ''):
         edges = self.get_edges_by_from_node(current_node)
         for edge in edges:
             node = edge.to
-            parent_identity_role = parent_identity_role if edge.type == 'is_parent_resource_of' else edge.type
-            resources_permissions.append((node,node.subtype, parent_identity_role))
+            identity_role = identity_role if edge.type == 'is_parent_resource_of' else edge.type
+            #only insert if the node if the edge type is not identity-identity
+            if edge.type != 'belongs_to':
+                resources_permissions.append((node,node.subtype, identity_role))
 
-            self.get_resources_and_permissions_of_identity_node(node , resources_permissions, parent_identity_role)
+            self.get_resources_and_permissions_of_identity_node(node , resources_permissions, identity_role)
 
         return resources_permissions
     
-    def get_identities_and_permissions_of_resource_node(self, current_node: Node, identities_permissions = []):
+    def get_identities_and_permissions_of_resource_node(self, current_node: Node, identities_permissions = [], identity_role=''):
         edges = self.get_edges_by_to_node(current_node)
         for edge in edges:
             node = edge.from_
             if edge.type != 'is_parent_resource_of':
-                identities_permissions.append((node, edge.type))
-            self.get_identities_and_permissions_of_resource_node(node , identities_permissions)
+                identity_role = identity_role if edge.type == 'belongs_to' else edge.type
+                identities_permissions.append((node, identity_role))
+            self.get_identities_and_permissions_of_resource_node(node , identities_permissions, identity_role=identity_role)
         
         return identities_permissions
 

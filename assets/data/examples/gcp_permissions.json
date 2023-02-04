@@ -110,7 +110,7 @@
                 {
                     "role": "roles/editor",
                     "members": [
-                        "proind@gmail.com"
+                        "user:proind@gmail.com"
                     ]
                 },
                 {
