@@ -11,10 +11,10 @@ class Node:
         self.subtype = kwargs.get('resource_type', kwargs.get('identity_type', None))
 
     def __str__(self):
-        return f'{self.subtype}_{self.type}({self.id})'
+        return f'{self.id.split(":")[-1].split("/")[-1]}'
 
     def __repr__(self):
-        return str(self)
+        return f'{self.subtype}_{self.type}({self.id.split(":")[-1].split("/")[-1]})'
     
     def __eq__(self, otherNode):
         return self.id == otherNode.id and self.type == otherNode.type
@@ -27,10 +27,10 @@ class Edge:
         self.type = type
 
     def __str__(self):
-        return f'{self.from_}----{self.type}----{self.to}'
+        return f'{self.from_}----{self.type.replace("roles/","")}----{self.to}'
     
     def __repr__(self):
-        return str(self)
+        return f'{repr(self.from_)}----{self.type.replace("roles/","")}----{repr(self.to)}'
 
     
     def __eq__(self, otherEdge):
@@ -97,7 +97,7 @@ class Graph:
         edges = self.get_edges_by_to_node(current_node, edge_type)
         for edge in edges:
             node = edge.from_
-            ancestors.append(node)
+            ancestors.append(str(node))
             self.get_ancestors(node, ancestors, edge_type)
         return ancestors
     
@@ -112,7 +112,7 @@ class Graph:
             identity_role = identity_role if edge.type == 'is_parent_resource_of' else edge.type
             #only insert if the node if the edge type is not identity-identity
             if edge.type != 'belongs_to':
-                resources_permissions.append((node,node.subtype, identity_role))
+                resources_permissions.append((str(node),node.subtype, identity_role.split('/')[-1][:-3]))
 
             self.get_resources_and_permissions_of_identity_node(node , resources_permissions, identity_role)
 
@@ -124,7 +124,7 @@ class Graph:
             node = edge.from_
             if edge.type != 'is_parent_resource_of':
                 identity_role = identity_role if edge.type == 'belongs_to' else edge.type
-                identities_permissions.append((node, identity_role))
+                identities_permissions.append((str(node), identity_role.split('/')[-1][:-3]))
             self.get_identities_and_permissions_of_resource_node(node , identities_permissions, identity_role=identity_role)
         
         return identities_permissions
