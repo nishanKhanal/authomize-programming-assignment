@@ -1,0 +1,293 @@
+[
+    {
+        "name": "//cloudresourcemanager.googleapis.com/organizations/org1",
+        "asset_type": "cloudresourcemanager.googleapis.com/Organization",
+        "iam_policy": {
+            "etag": "fDsaNlk=",
+            "bindings": [
+                {
+                    "role": "roles/browser",
+                    "members": [
+                        "serviceAccount:service-account-28105194058262@authomize-15054614561264767466.iam.gserviceaccount.com"
+                    ]
+                },
+                {
+                    "role": "roles/iam.securityReviewer",
+                    "members": [
+                        "serviceAccount:compliance-reviewer-1@striking-arbor-264209.iam.gserviceaccount.com"
+                    ]
+                },
+                {
+                    "role": "roles/owner",
+                    "members": [
+                        "serviceAccount:service-account-28105194058262@authomize-15054614561264767466.iam.gserviceaccount.com",
+                        "user:ron@test.authomize.com"
+                    ]
+                },
+                {
+                    "role": "roles/resourcemanager.folderAdmin",
+                    "members": [
+                        "user:ron@test.authomize.com"
+                    ]
+                },
+                {
+                    "role": "roles/resourcemanager.organizationViewer",
+                    "members": [
+                        "user:proind@gmail.com"
+                    ]
+                }
+            ]
+        },
+        "ancestors": [
+            "organizations/org1"
+        ]
+    },
+    {
+        "name": "//cloudresourcemanager.googleapis.com/folders/f1",
+        "asset_type": "cloudresourcemanager.googleapis.com/Folder",
+        "iam_policy": {
+            "etag": "fDsaNlk=",
+            "bindings": [
+                {
+                    "role": "roles/owner",
+                    "members": [
+                        "serviceAccount:service-account-28105194058262@authomize-15054614561264767466.iam.gserviceaccount.com",
+                        "user:ron@test.authomize.com"
+                    ]
+                },
+                {
+                    "role": "roles/resourcemanager.folderAdmin",
+                    "members": [
+                        "user:ron@test.authomize.com"
+                    ]
+                },
+                {
+                    "role": "roles/resourcemanager.folderEditor",
+                    "members": [
+                        "user:ron@test.authomize.com",
+                        "group:bestgroup@test.authomize.com"
+                    ]
+                }
+            ]
+        },
+        "ancestors": [
+            "folders/f1",
+            "organizations/org1"
+        ]
+    },
+    {
+        "name": "//cloudresourcemanager.googleapis.com/folders/f11",
+        "asset_type": "cloudresourcemanager.googleapis.com/Folder",
+        "iam_policy": {
+            "etag": "fDsaNlk=",
+            "bindings": [
+                {
+                    "role": "roles/resourcemanager.folderAdmin",
+                    "members": [
+                        "user:proind@gmail.com"
+                    ]
+                },
+                {
+                    "role": "roles/resourcemanager.folderEditor",
+                    "members": [
+                        "user:proind@gmail.com"
+                    ]
+                }
+            ]
+        },
+        "ancestors": [
+            "folders/f11",
+            "folders/f1",
+            "organizations/org1"
+        ]
+    },
+    {
+        "name": "//cloudresourcemanager.googleapis.com/projects/p1111",
+        "asset_type": "cloudresourcemanager.googleapis.com/Project",
+        "iam_policy": {
+            "etag": "fDsaNlk=",
+            "bindings": [
+                {
+                    "role": "roles/editor",
+                    "members": [
+                        "proind@gmail.com"
+                    ]
+                },
+                {
+                    "role": "roles/owner",
+                    "members": [
+                        "user:projUser@test.authomize.com"
+                    ]
+                }
+            ]
+        },
+        "ancestors": [
+            "projects/p1111",
+            "folders/f11",
+            "folders/f1",
+            "organizations/org1"
+        ]
+    },
+    {
+        "name": "//cloudresourcemanager.googleapis.com/folders/f12",
+        "asset_type": "cloudresourcemanager.googleapis.com/Folder",
+        "iam_policy": {
+            "etag": "fDsaNlk=",
+            "bindings": [
+                {
+                    "role": "roles/owner",
+                    "members": [
+                        "serviceAccount:service-account-28105194058262@authomize-15054614561264767466.iam.gserviceaccount.com",
+                        "user:ron@test.authomize.com"
+                    ]
+                },
+                {
+                    "role": "roles/resourcemanager.folderAdmin",
+                    "members": [
+                        "user:proind@gmail.com"
+                    ]
+                },
+                {
+                    "role": "roles/resourcemanager.folderEditor",
+                    "members": [
+                        "user:proind@gmail.com"
+                    ]
+                }
+            ]
+        },
+        "ancestors": [
+            "folders/f12",
+            "folders/f1",
+            "organizations/org1"
+        ]
+    },
+    {
+        "name": "//cloudresourcemanager.googleapis.com/folders/f2",
+        "asset_type": "cloudresourcemanager.googleapis.com/Folder",
+        "iam_policy": {
+            "etag": "fDsaNlk=",
+            "bindings": [
+                {
+                    "role": "roles/owner",
+                    "members": [
+                        "serviceAccount:service-account-28105194058262@authomize-15054614561264767466.iam.gserviceaccount.com",
+                        "user:ron@test.authomize.com"
+                    ]
+                },
+                {
+                    "role": "roles/resourcemanager.folderAdmin",
+                    "members": [
+                        "user:amir@test.authomize.com"
+                    ]
+                },
+                {
+                    "role": "roles/resourcemanager.folderEditor",
+                    "members": [
+                        "user:amir@test.authomize.com"
+                    ]
+                }
+            ]
+        },
+        "ancestors": [
+            "folders/f2",
+            "organizations/org1"
+        ]
+    },
+    {
+        "name": "//cloudresourcemanager.googleapis.com/folders/f21",
+        "asset_type": "cloudresourcemanager.googleapis.com/Folder",
+        "iam_policy": {
+            "etag": "fDsaNlk=",
+            "bindings": [
+                {
+                    "role": "roles/owner",
+                    "members": [
+                        "serviceAccount:service-account-28105194058262@authomize-15054614561264767466.iam.gserviceaccount.com",
+                        "user:ron@test.authomize.com"
+                    ]
+                },
+                {
+                    "role": "roles/resourcemanager.folderAdmin",
+                    "members": [
+                        "user:amir@test.authomize.com"
+                    ]
+                },
+                {
+                    "role": "roles/resourcemanager.folderEditor",
+                    "members": [
+                        "user:amir@test.authomize.com"
+                    ]
+                }
+            ]
+        },
+        "ancestors": [
+            "folders/f21",
+            "folders/f2",
+            "organizations/org1"
+        ]
+    },
+    {
+        "name": "//cloudresourcemanager.googleapis.com/folders/f3",
+        "asset_type": "cloudresourcemanager.googleapis.com/Folder",
+        "iam_policy": {
+            "etag": "fDsaNlk=",
+            "bindings": [
+                {
+                    "role": "roles/owner",
+                    "members": [
+                        "serviceAccount:service-account-28105194058262@authomize-15054614561264767466.iam.gserviceaccount.com",
+                        "user:ron@test.authomize.com"
+                    ]
+                },
+                {
+                    "role": "roles/resourcemanager.folderAdmin",
+                    "members": [
+                        "user:peleg@test.authomize.com"
+                    ]
+                },
+                {
+                    "role": "roles/resourcemanager.folderEditor",
+                    "members": [
+                        "user:peleg@test.authomize.com"
+                    ]
+                },
+                {
+                    "role": "roles/viewer",
+                    "members": [
+                        "group:reviewers@test.authomize.com"
+                    ]
+                }
+            ]
+        },
+        "ancestors": [
+            "folders/f3",
+            "organizations/org1"
+        ]
+    },
+    {
+        "name": "//cloudresourcemanager.googleapis.com/projects/p31",
+        "asset_type": "cloudresourcemanager.googleapis.com/Project",
+        "iam_policy": {
+            "etag": "fDsaNlk=",
+            "bindings": [
+                {
+                    "role": "roles/editor",
+                    "members": [
+                        "user:peleg@test.authomize.com"
+                    ]
+                },
+                {
+                    "role": "roles/owner",
+                    "members": [
+                        "user:newUser@test.authomize.com"
+                    ]
+                }
+            ]
+        },
+        "ancestors": [
+            "projects/p31",
+            "folders/f3",
+            "organizations/org1"
+        ]
+    }
+]
