@@ -1,7 +1,7 @@
 import json
 from pprint import pprint, pformat
 
-from typing import List
+from typing import List, Callable, Tuple, Union, Optional
 
 class Node:
 
@@ -42,10 +42,7 @@ class Graph:
         self._nodes = []
         self._edges = []
 
-    def get_stat(self):
-        return f'Number of Nodes: {len(self._nodes)}\n Number of Edges: {len(self._edges)}'
-
-    def get_or_insert_node(self, node: Node):
+    def get_or_insert_node(self, node: Node) -> Node:
         graph_node = self.get_node(node)
         if graph_node is None:
             self._nodes.append(node)
@@ -54,25 +51,25 @@ class Graph:
         return graph_node
 
 
-    def get_node(self, node: Node):
+    def get_node(self, node: Node) -> Union[Node, None] :
         for graph_node in self._nodes:
             if graph_node == node:
                 return graph_node
         return None
 
-    def insert_edge(self, from_: Node, to: Node, type: str):
+    def insert_edge(self, from_: Node, to: Node, type: str) -> Edge:
         edge = Edge(from_, to, type)
         self._edges.append(edge)
         return edge
 
-    def get_edges_by_from_node(self, from_: Node, edge_type = None):
+    def get_edges_by_from_node(self, from_: Node, edge_type: Optional[str] = None) -> List[Edge]:
         if edge_type is None:
             edges_from_node = [ edge for edge in self._edges if edge.from_ == from_ ]
         else:
             edges_from_node = [ edge for edge in self._edges if edge.from_ == from_ and edge.type == edge_type ]
         return edges_from_node
     
-    def get_edges_by_to_node(self, to: Node, edge_type=None):
+    def get_edges_by_to_node(self, to: Node, edge_type: Optional[str] = None) -> List[Edge]:
         if edge_type is None:
             edges_to_node = [ edge for edge in self._edges if edge.to == to ]
         else:
@@ -80,7 +77,7 @@ class Graph:
         return edges_to_node
     
     
-    def traverse(self, current_node: Node, direction: str ='down', recursive: bool = True, function=None, output=[]):
+    def traverse(self, current_node: Node, direction: Optional[str] ='down', recursive: Optional[bool] = True, function: Optional[Callable] = None, output: Optional[List] = []) -> List:
         if direction not in ['up' , 'down'] :
             raise Exception('direction must be "up" or "down"')
 
@@ -93,7 +90,7 @@ class Graph:
                 self.trav(node , direction, recursive, output)
         return output
 
-    def get_ancestors(self, current_node: Node, ancestors=[], edge_type = None):
+    def get_ancestors(self, current_node: Node, ancestors: List = [], edge_type: Optional[str] = None) -> List[str]:
         edges = self.get_edges_by_to_node(current_node, edge_type)
         for edge in edges:
             node = edge.from_
@@ -101,11 +98,11 @@ class Graph:
             self.get_ancestors(node, ancestors, edge_type)
         return ancestors
     
-    def get_resource_ancestors(self, current_node: Node):
+    def get_resource_ancestors(self, current_node: Node) -> List[str]:
         return self.get_ancestors(current_node, ancestors=[], edge_type = 'is_parent_resource_of')
     
     
-    def get_resources_and_permissions_of_identity_node(self, current_node: Node, resources_permissions=[], identity_role = ''):
+    def get_resources_and_permissions_of_identity_node(self, current_node: Node, resources_permissions: Optional[List] = [], identity_role: Optional[str] = '') -> List[Tuple[str,str,str]]:
         edges = self.get_edges_by_from_node(current_node)
         for edge in edges:
             node = edge.to
@@ -118,7 +115,7 @@ class Graph:
 
         return resources_permissions
     
-    def get_identities_and_permissions_of_resource_node(self, current_node: Node, identities_permissions = [], identity_role=''):
+    def get_identities_and_permissions_of_resource_node(self, current_node: Node, identities_permissions: Optional[List] = [], identity_role: Optional[str] ='') -> List[Tuple[str,str]]:
         edges = self.get_edges_by_to_node(current_node)
         for edge in edges:
             node = edge.from_
@@ -129,12 +126,15 @@ class Graph:
         
         return identities_permissions
 
-    def show(self):
+    def show(self) -> None:
         print(self)
 
-    def __str__(self):
+    def __str__(self) -> str:
         nodes = pformat(self._nodes)
         edges = pformat(self._edges)
         return f"Nodes:\n{nodes}\n\nEdges:\n{edges}"
+    
+    def get_stat(self) -> str:
+        return f'Number of Nodes: {len(self._nodes)}\n Number of Edges: {len(self._edges)}'
         
         

@@ -1,7 +1,7 @@
 import json
 import os
 from pprint import pprint
-from typing import List, Dict
+from typing import List, Dict, Union
 
 from services.google_api import GoogleAdminSDKDirectoryAPI
 
@@ -97,7 +97,7 @@ def main():
     pprint(identities_permissions)
 
 
-def add_nodes(graph: Graph, users: List, groups: List, group_members: Dict):
+def add_nodes(graph: Graph, users: List, groups: List, group_members: Dict) -> Graph:
     for user in users:
         user_node = graph.get_or_insert_node(
             Node(id=f'user:{user.get("primaryEmail", "")}', type='identity', identity_type='user'))
@@ -110,10 +110,11 @@ def add_nodes(graph: Graph, users: List, groups: List, group_members: Dict):
             member_node = graph.get_or_insert_node(
                 Node(id=f'{identity_type}:{member.get("email", "")}', type='identity', identity_type=identity_type))
             graph.insert_edge(member_node, group_node, 'belongs_to')
+
     return graph
 
 
-def build_GCP_permission_graph(json_file_path: str):
+def build_GCP_permission_graph(json_file_path: str) -> Graph:
     graph = Graph()
     gcp_resource_list = []
 
@@ -151,7 +152,7 @@ def build_GCP_permission_graph(json_file_path: str):
     return graph
 
 
-def display_task_number(task_number):
+def display_task_number(task_number: Union[str, int]) -> None:
     print('\n', '-'*30, 'Task', task_number, '-'*30, '\n')
 
 
